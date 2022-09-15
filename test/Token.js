@@ -6,7 +6,7 @@ const tokens = (n) => {
 }
 
 describe ('Token' , ()=> {
-	let token , accounts, deployer
+	let token , accounts, deployer, receiver
 	
 
 	beforeEach( async () => {
@@ -15,13 +15,14 @@ describe ('Token' , ()=> {
 
 	  accounts = await ethers.getSigners()
 	  deployer = accounts[0]
+	  receiver = accounts[1]
 	})
 
 	describe ('Deployment' , () =>{
 		const name = 'Dapp University'
 		const symbol = 'DAPP'
 		const decimals = '18'
-		const totalSupply = tokens('1000000')
+		const totalSupply = tokens(1000000)
 
 	 it('has correct name' , async () => {
        expect(await token.name()).to.equal(name)
@@ -45,7 +46,44 @@ describe ('Token' , ()=> {
 
 	})
 
-	 
+	describe('sending tokens' , () => {
+     let amount , transaction , result 
 
-    
+      describe('success' , () =>{
+      	beforeEach( async () => {
+       //transfer tokens
+		 amount = tokens(100)
+       transaction = await token.connect(deployer).transfer(receiver.address , amount)
+       result = await transaction.wait()
+     })
+
+		it ('tranfers token balances' , async() => {
+      // Ensure that tokens were transfered(balance changed)
+       expect(await token.balanceOf(deployer.address)).to.equal(tokens(999900))
+       expect(await token.balanceOf(receiver.address)).to.equal(amount)
+		}) 
+
+		it ('emits a Tranfer event ' , async() => {
+       const event = result.events[0]
+       expect(event.event).to.equal('Transfer')
+
+       const args = event.args
+       expect(args.from).to.equal(deployer.address)
+       expect(args.to).to.equal(receiver.address)
+       expect(args.value).to.equal(amount)
+
+		})
+ })
+
+     describe('failure' , () =>{
+     	 it('rejects insufficient balances' , async () =>{
+     	 	//transfer more tokens than deployer has _ 100M
+     	 	const invalidAmount = tokens(100000000) 
+     	 	await expect(token.connect(deployer).transfer(receiver.address , invalidAmount )).to.be.reverted
+     	 })
+     	 it ('rejects invalid recipent ' , async() =>{
+     	 	await expect(token.connect(deployer).transfer('0x0000000000000000000000000000000000000000' , amount)).to.be.reverted
+     	 })
+     })    
+	})
 })
