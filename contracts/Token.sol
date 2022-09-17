@@ -28,19 +28,26 @@ contract Token{
     function transfer(address _to, uint256 _value) public returns(bool success) {
        //require that spender has enough tokens to spend
        require(balanceOf[msg.sender] >= _value);
+
+       _transfer(msg.sender , _to , _value);
+       
+        return true;
+    }
+
+    function _transfer(address _from , address _to ,  uint256 _value) internal {
        //make sure not to accidentally burn tokens
        require(_to != address(0)); 
        //Deduct tokens from spender
-       balanceOf[msg.sender]= balanceOf[msg.sender] - _value;
+       balanceOf[_from]= balanceOf[_from] - _value;
 
        // credit tokens to receiver
        balanceOf[_to] = balanceOf[_to] + _value;
 
        // Emit Event 
-       emit Transfer(msg.sender , _to , _value);
-        
-        return true;
+       emit Transfer(_from , _to , _value);
+        	
     }
+
 
     function approve(address _spender , uint256 _value) public returns(bool success){
 
@@ -53,4 +60,22 @@ contract Token{
 
     	return true; 
     }
-}
+
+  
+
+    function transferFrom(address _from , address _to , uint256 _value) public returns(bool success){
+          
+        require(_value <= balanceOf[_from]);
+    	// check for approval
+    	require(_value <= allowance[_from][msg.sender]);
+
+        // spend tokens
+    	_transfer(_from , _to , _value);
+
+    	// Reset Allowance
+    	allowance[_from][msg.sender] = allowance[_from][msg.sender] - _value; 
+
+    	return true;
+    }
+  }
+  

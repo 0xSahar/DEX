@@ -101,7 +101,7 @@ describe ('Token' , ()=> {
 	 			expect(await token.allowance(deployer.address , exchange.address)).to.equal(amount)
 	 		})
 
-	 		it('emits the Approval event' , async() =>{
+	 		it('emits an Approval event' , async() =>{
 	 			const event = result.events[0]
 	 			expect(event.event).to.equal('Approval')
 
@@ -118,4 +118,48 @@ describe ('Token' , ()=> {
         })
 	 	})
 	 })
+
+	  describe('delegated token transfers' , () =>{
+	  	let transaction , result , amount 
+
+        beforeEach (async() =>{
+        	amount = tokens(100)
+         transaction = await token.connect(deployer).approve(exchange.address , amount)
+         result = await transaction.wait()
+        })
+
+        describe('success' , () =>{
+          beforeEach ( async() =>{
+          	transaction = await token.connect(exchange).transferFrom(deployer.address , receiver.address , amount)
+          	result = await transaction.wait()
+          })
+
+          it('transfers Token balances' , async() =>{
+          	expect(await token.balanceOf(deployer.address)).to.equal(tokens(999900))
+          	expect(await token.balanceOf(receiver.address)).to.equal(amount)
+          })
+
+          it('resets the allowance' , async()=>{
+          	expect(await token.allowance(deployer.address , exchange.address)).to.equal(0)
+          })
+
+          it ('emits a Tranfer event ' , async() => {
+          const event = result.events[0]
+          expect(event.event).to.equal('Transfer')
+
+          const args = event.args
+          expect(args.from).to.equal(deployer.address)
+          expect(args.to).to.equal(receiver.address)
+          expect(args.value).to.equal(amount)
+		})
+        })
+
+        describe('failure' , () => {
+        	const invalidAmount = tokens(100000000)
+
+           it('Rejects insufficient amounts' , async ()=>{
+           	await expect(token.connect(exchange).transferFrom(deployer.address , receiver.address , invalidAmount)).to.be.reverted
+           })
+        })
+	  })
 })
