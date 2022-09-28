@@ -9,7 +9,7 @@ contract Exchange{
 	address public feeAccount;
 	uint256 public feePercent;
 
-	mapping (address => mapping(address => uint256)) public tokens;
+    mapping (address => mapping(address => uint256)) public tokens; //tracks the user's balance on exchange
 	mapping (uint256 => _Order) public orders;
     uint256 public ordersCount;
     mapping(uint256 => bool) public orderCancelled;
@@ -88,7 +88,7 @@ contract Exchange{
 
 	}
 
-	// check balances (wrapper funcction that checks the value out of a mapping)
+	// check balances (wrapper function that checks the value out of a mapping)
 	function balanceOf(address _token , address _user)
 	public 
 	view

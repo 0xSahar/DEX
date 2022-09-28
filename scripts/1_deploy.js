@@ -3,7 +3,7 @@ async function main() {
   console.log(`preparing deployment ...\n`)
 
 
- //fetch contract to deploy 
+ //fetch contract to deploy (artifacts)
  const Token = await ethers.getContractFactory('Token')
  const Exchange = await ethers.getContractFactory('Exchange')
 
