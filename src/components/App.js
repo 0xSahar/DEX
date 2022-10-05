@@ -1,26 +1,31 @@
-import {useEffect} from 'react';
-import {ethers} from 'ethers';
-import TOKEN_ABI from '../abis/Token.json';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import config from '../config.json';
+
+import { loadProvider ,
+ loadNetwork ,
+ loadAccount,
+ loadToken,
+} from '../store/interactions';
 
 
 function App() {
 
-  const loadBlockchainData = async () =>{
-    const accounts = await window.ethereum.request({method:'eth_requestAccounts'}) 
-    console.log(accounts[0])
+  const dispatch = useDispatch()
 
-    //connect ethers to blockchain / provider = connection to the blockchain
-    const provider = new ethers.providers.Web3Provider(window.ethereum)//metamask connection 
-    const {chainId} = await provider.getNetwork() //network = blockchain
-    console.log(chainId)// network.chainId Destructing in javascript
+  const loadBlockchainData = async () =>{
+     
+    await loadAccount(dispatch)
+    
+
+    //connect ethers to blockchain 
+    const provider = loadProvider(dispatch) 
+    const chainId = await loadNetwork(provider , dispatch)
+
+
 
     // javascript version of the smart contract / instance
-    const token = new ethers.Contract(config[chainId].DApp.address , TOKEN_ABI , provider )
-    console.log(token.address)
-    const symbol = await token.symbol()
-    console.log(symbol)
-
+    await loadToken(provider , config[chainId].DApp.address , dispatch )
   }
 
 
