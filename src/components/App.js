@@ -5,7 +5,8 @@ import config from '../config.json';
 import { loadProvider ,
  loadNetwork ,
  loadAccount,
- loadToken,
+ loadTokens,
+ loadExchange
 } from '../store/interactions';
 
 
@@ -14,18 +15,24 @@ function App() {
   const dispatch = useDispatch()
 
   const loadBlockchainData = async () =>{
-     
-    await loadAccount(dispatch)
-    
-
-    //connect ethers to blockchain 
+  
+   //connect ethers to blockchain 
     const provider = loadProvider(dispatch) 
-    const chainId = await loadNetwork(provider , dispatch)
+  //fetch current networks's chainId (e.g. hardhat :31337 , kovan :42) 
+    const chainId = await loadNetwork(provider , dispatch) //network.chainId = {chainId} destructring in javascript
+  
+  //fetch current account and balance from metamask 
+    await loadAccount(provider,dispatch)
 
 
+    //load token smart conctracts
+    const DApp = config[chainId].DApp
+    const mETH = config[chainId].mETH
+    await loadTokens(provider , [DApp.address , mETH.address] , dispatch )
 
-    // javascript version of the smart contract / instance
-    await loadToken(provider , config[chainId].DApp.address , dispatch )
+    //load exchange smart contract
+    const exchange = config[chainId].exchange 
+    await loadExchange(provider , exchange.address , dispatch)
   }
 
 
