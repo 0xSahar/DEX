@@ -10,7 +10,7 @@ contract Exchange{
 	uint256 public feePercent;
 
     mapping (address => mapping(address => uint256)) public tokens; //tracks the user's balance on exchange
-	mapping (uint256 => _Order) public orders;
+	  mapping (uint256 => _Order) public orders;
     uint256 public ordersCount;
     mapping(uint256 => bool) public orderCancelled;
     mapping(uint256 => bool) public orderFilled;

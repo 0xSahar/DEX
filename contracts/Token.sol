@@ -11,7 +11,7 @@ contract Token{
 
 	//Track balances
 	mapping(address => uint256) public balanceOf;
-    mapping (address => mapping (address => uint256)) public allowance;
+   mapping (address => mapping (address => uint256)) public allowance;
 
 	event Transfer(address indexed from , address indexed to , uint256 value);
 
