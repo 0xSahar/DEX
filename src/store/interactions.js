@@ -72,6 +72,12 @@ export const loadNetwork = async (provider , dispatch)=>{
     })
  }
 
+//function(movie) === movie =>
+
+
+
+
+
  //----------------------------------------
  //load user balances (wallet and exchange)
   export const loadBalances = async(exchange , tokens , account , dispatch) => {
@@ -92,6 +98,32 @@ export const loadNetwork = async (provider , dispatch)=>{
   }
 
 
+  //---------------------------------------
+  //load All orders 
+  export const loadAllOrders = async(provider , exchange , dispatch) => {
+   const block = await provider.getBlockNumber()
+
+
+   //fetch filled orders
+   const tradeStream = await exchange.queryFilter('Trade' , 0 , block)
+   const filledOrders = tradeStream.map(event => event.args) 
+
+   dispatch ({type : 'FILLED_ORDERS_LOADED' , filledOrders})
+
+   //fetch cancelled orders
+   const cancelStream = await exchange.queryFilter('Cancel' , 0 , block)
+   const cancelledOrders = cancelStream.map(event => event.args) 
+
+   dispatch ({type : 'CANCELLED_ORDERS_LOADED' , cancelledOrders})
+ 
+ //fetch all orders
+   const orderStream = await exchange.queryFilter('Order' , 0 , block)
+   const allOrders = orderStream.map(event => event.args) //we get the arguments from the event itself = orders
+
+   dispatch ({type : 'ALL_ORDERS_LOADED' , allOrders})
+   
+
+  }
 
 //--------------------------------
  //tranfer tokens(deposit & withdraws)
