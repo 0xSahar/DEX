@@ -184,13 +184,13 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE , action  )=>{
      case 'NEW_ORDER_SUCCESS' :
 
      //prevent duplicate orders
-      let data , index
-     index = state.allOrders.data.findIndex(order => order.id.toString() === action.order.id.toString())
-      if(index === -1){
-         data =[...state.allOrders.data , action.order]
-     }else{
-       data =  state.allOrders.data 
-      }
+      //let data , index
+     //index = state.allOrders.data.findIndex(order => order.id.toString() === action.order.id.toString())
+      //if(index === -1){
+         //data =[...state.allOrders.data , action.order]
+     //}else{
+       //data =  state.allOrders.data 
+      //}
 
      
      return{
