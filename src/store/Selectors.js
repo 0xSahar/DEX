@@ -8,6 +8,7 @@ const GREEN = '#25CE8F'
 const RED = '#F45353'
 
 const tokens = state => get(state , 'tokens.contracts')
+const account = state => get(state , 'provider.account')
 
 const allOrders = state => get(state , 'exchange.allOrders.data' , [])
 const cancelledOrders = state => get(state , 'exchange.cancelledOrders.data' , [])
@@ -46,6 +47,53 @@ const decorateOrderBookOrder = (order , tokens) =>{
   	orderTypeClass : (orderType === 'buy' ? GREEN : RED),
   	orderFillAction : (orderType === 'buy' ? 'sell' : 'buy')
   })
+}
+
+
+// -------------------------
+// my open orders
+export const myOpenOrdersSelector = createSelector(
+	  account ,
+	  openOrders ,
+	  tokens,
+	  (account , orders , tokens)=>{
+	  	if(! tokens[0] || ! tokens[1]) { return }
+
+	  //filter orders created by current account
+	  orders = orders.filter((o)=> o.user === account )	
+
+	  //filter orders by selected tokens
+    orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address)
+    orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
+
+    // decorate orders - add display attributes
+    orders = decorateMyOpenOrders(orders , tokens)
+
+    // sort orders by time descending
+     orders = orders.sort((a,b)=> b.timestamp - a.timestamp)
+
+     return orders
+
+}) 
+
+const decorateMyOpenOrders = (orders , tokens)=>{
+	return(
+	 orders.map((order)=>{
+	 	order = decorateOrder(order, tokens)
+	 	order = decorateMyOpenOrder(order , tokens)
+	 	return(order)
+		})
+		)
+
+}
+
+const decorateMyOpenOrder = (order , tokens) =>{
+   let orderType = order.tokenGive === tokens[1].address ? 'buy' : 'sell'
+   return({
+   	...order,
+   	  orderType,
+   	  orderTypeClass : (orderType === 'buy' ? GREEN : RED)
+   })
 }
 
 const decorateOrder =(order, tokens) =>{
