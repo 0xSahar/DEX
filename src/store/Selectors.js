@@ -76,6 +76,76 @@ return({
 
 }
 
+// --------------------------------------------------
+// All Filled orders
+ export const filledOrdersSelector = createSelector(
+ 	filledOrders,
+ 	tokens,
+ 	 (orders , tokens) =>{
+ 	 	if(! tokens[0] || ! tokens[1]) { return }
+
+ 	 	//filter orders by selected tokens
+    orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address)
+    orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
+
+    //step 1 : sort orders by time ascending 
+    //step 2 : apply order colors
+    //step 3 : sort orders by time descending for UI
+
+    // sort orders by time ascending for price comparison 
+    orders = orders.sort((a,b) => a.timestamp - b.timestamp) 
+
+
+     orders = decorateFilledOrders(orders , tokens)
+
+     // sort orders by time descending for display
+     orders = orders.sort((a,b) => b.timestamp - a.timestamp)
+
+     return orders
+ })
+
+ const decorateFilledOrders = (orders , tokens) =>{
+ 	// track previous order to comaore history
+ 	  let previousOrder = orders[0]
+ 	return(
+ 		orders.map((order) =>{
+    // decorate each individual order
+    order = decorateOrder(order , tokens)
+    order = decorateFilledOrder(order , previousOrder)
+    previousOrder = order // update the previous order once it's decorated 
+    return order
+
+ 		})
+ 		)
+
+ } 
+
+ const decorateFilledOrder = (order , previousOrder) =>{
+   return({
+   	...order,
+   	tokenPriceClass : tokenPriceClass(order.tokenPrice , order.id , previousOrder)
+
+   })
+ }
+
+ const tokenPriceClass = (tokenPrice , orderId , previousOrder) =>{
+
+ 	// show green price if only one order exists
+ 	if(previousOrder.id === orderId ){
+ 		return GREEN
+ 	} 
+
+ 	// show green price if order price higher than previous order price
+  // show red price if order price lower than previous order price
+   if(previousOrder.tokenPrice <= tokenPrice ){
+   	return GREEN //success
+   }else{
+   	 return RED //Danger 
+   }
+
+ }
+
+
 //----------------------------------
 //Order Book
 export const OrderBookSelector = createSelector( 
@@ -141,7 +211,7 @@ export const PriceChartSelector = createSelector(
     let lastOrder , secondLastOrder 
     [secondLastOrder , lastOrder] = orders.slice(orders.length - 2 , orders.length)
     
-    
+
    // get last order price
     const lastPrice = get(lastOrder , 'tokenPrice' , 0) 
   // get secondLast order price 
