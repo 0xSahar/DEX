@@ -86,7 +86,7 @@ const Balance = () => {
     if(exchange && tokens[0] && tokens[1] && account){
       loadBalances(exchange , tokens , account , dispatch)
     }
-   }, [exchange , tokens , account , transferInProgress] )
+   }, [exchange , tokens , account , transferInProgress , dispatch])
    // if any of these variables change call the laodBlances again (reload the component (refetch the balances))
 
 
@@ -144,7 +144,7 @@ const Balance = () => {
         </div>
 
         <form onSubmit = {isDeposit ? ((e) => depositHandler(e,tokens[1])) : ((e) => withdrawHandler(e,tokens[1]))}>
-          <label htmlFor="token1"></label>
+          <label htmlFor="token1">{symbols && symbols[1]} Amount</label>
           <input 
           type="text"
            id='token1' 
