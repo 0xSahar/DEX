@@ -69,6 +69,11 @@ export const loadNetwork = async (provider , dispatch)=>{
     exchange.on('Order' ,(id , user , tokenGet , amountGet , tokenGive , amountGive , timestamp , event) =>{
      const order = event.args
        dispatch({type : 'NEW_ORDER_SUCCESS' ,order , event})
+   })
+
+    exchange.on('Cancel' , (id , user , tokenGet , amountGet , tokenGive , amountGive , timestamp , event) =>{
+      const order = event.args
+        dispatch({type : 'ORDER_CANCEL_SUCCESS' , order , event})
     })
  }
 
@@ -80,7 +85,7 @@ export const loadNetwork = async (provider , dispatch)=>{
 
  //----------------------------------------
  //load user balances (wallet and exchange)
-  export const loadBalances = async(exchange , tokens , account , dispatch) => {
+   export const loadBalances = async(exchange , tokens , account , dispatch) => {
     let balance = ethers.utils.formatUnits(await tokens[0].balanceOf(account) , 18)
     dispatch({type : 'TOKEN_1_BALANCE_LOADED' , balance })
 
@@ -189,3 +194,18 @@ export const makeSellOrder = async(provider , exchange , tokens , order , dispat
         dispatch({type : 'NEW_ORDER_FAIL'})
      }
    }
+
+   //------------------------------
+   //cancel order
+   export const cancelOrder = async(provider , exchange , order , dispatch) =>{
+
+    dispatch({type : 'ORDER_CANCEL_REQUEST'})
+     
+     try{
+        const signer = await provider.getSigner()
+        const transaction = await exchange.connect(signer).cancelOrder(order.id)
+        await transaction.wait()
+     } catch(error){
+        dispatch({type : 'ORDER_CANCEL_FAIL'})
+     }
+ }
