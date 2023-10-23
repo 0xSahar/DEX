@@ -22,15 +22,8 @@ const events = state =>get(state , 'exchange.events')
   		
   		return events
 
-  }
+}
   )
-
-
-
-
-
-
-
 
 
 const allOrders = state => get(state , 'exchange.allOrders.data' , [])
@@ -48,28 +41,6 @@ const openOrders = state =>{
   return (orderFilled || orderCancelled )
 	}) 
 	return openOrders
-}
-
-
-const decorateOrderBookOrders = (orders, tokens) =>{
-	return(
-      orders.map((order) =>{
-    	order = decorateOrder(order , tokens)
-    	order= decorateOrderBookOrder(order, tokens)
-    	return(order)		
-    })
-  )
-}
-
-const decorateOrderBookOrder = (order , tokens) =>{
-  const orderType = order.tokenGive === tokens[1].address ? 'buy' : 'sell'
-
-  return({
-  	...order,
-  	orderType,
-  	orderTypeClass : (orderType === 'buy' ? GREEN : RED),
-  	orderFillAction : (orderType === 'buy' ? 'sell' : 'buy')
-  })
 }
 
 
@@ -122,14 +93,14 @@ const decorateMyOpenOrder = (order , tokens) =>{
 const decorateOrder =(order, tokens) =>{
 	let token0Amount , token1Amount
   
-  //Note: DApp should be considered token 0 , mETH is considered token 1
-  //example : giving mETH in exchange for DApp
-   if(order.tokenGive === tokens[1].address){
-   	token0Amount = order.amountGive //the amount of DApp we are giving
-   	token1Amount = order.amountGet //the amount of mETH we want 
+  //Note: ele should be considered token 0 , mWETH is considered token 1
+  //example : giving mWETH in exchange for ele
+   if(order.tokenGive === tokens[0].address){
+   	token0Amount = order.amountGive //the amount of ele we are giving
+   	token1Amount = order.amountGet //the amount of mWETH we want 
    }else{
-     token0Amount = order.amountGet //the amount of DApp we want 
-     token1Amount = order.amountGive // the amount of mETH we are giving
+     token0Amount = order.amountGet //the amount of ele we want 
+     token1Amount = order.amountGive // the amount of mWETH we are giving
    }
    //calculate tokenPrice to 5 decimal places
    const precision = 100000
@@ -141,7 +112,7 @@ return({
 	...order,
 	token0Amount : ethers.utils.formatUnits(token0Amount , "ether"), 
 	token1Amount : ethers.utils.formatUnits(token1Amount , "ether"),
-	tokenPrice , //tokenPrice : tokenPrice 
+	tokenPrice , 
 	formattedTimestamp : moment.unix(order.timestamp).format('h :mm :ssa d MMM D')
 })
 
@@ -313,8 +284,29 @@ export const OrderBookSelector = createSelector(
      }
 
      return orders
-     
   })
+
+const decorateOrderBookOrders = (orders, tokens) =>{
+  return(
+      orders.map((order) =>{
+      order = decorateOrder(order , tokens)
+      order= decorateOrderBookOrder(order, tokens)
+      return(order)   
+    })
+  )
+}
+
+const decorateOrderBookOrder = (order , tokens) =>{
+  const orderType = order.tokenGive === tokens[1].address ? 'buy' : 'sell'
+
+  return({
+    ...order,
+    orderType,
+    orderTypeClass : (orderType === 'buy' ? GREEN : RED),
+    orderFillAction : (orderType === 'buy' ? 'sell' : 'buy')
+  })
+}
+
 
 //--------------------------------
 //priceChart
@@ -359,6 +351,7 @@ export const PriceChartSelector = createSelector(
 const buildraphData = (orders) =>{
 	//group the orders by hour for the graph
 	orders = groupBy(orders , (o) => moment.unix(o.timestamp).startOf('hour').format())//hourly canclestick
+  
     
     //get each hour where data exists
     const hours = Object.keys(orders)
@@ -382,6 +375,6 @@ const buildraphData = (orders) =>{
     		   low.tokenPrice ,
     		   close.tokenPrice]
    	})
-  })
+})
  return graphData
 }

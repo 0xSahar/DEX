@@ -24,8 +24,14 @@ const Markets = () => {
       {config && config[chainId] 
       ? 
       (<select name="markets" id="markets" onChange = {markethandler}> 
-      <option value={`${config[chainId].DApp.address},${config[chainId].mETH.address}`} > DApp / mETH </option>
-      <option value={`${config[chainId].DApp.address},${config[chainId].mDAI.address}`} > DApp / mDAI </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mWETH.address}`} > ele / mWETH  </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mDAI.address}`} > ele / mDAI </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mUSDT.address}`} > ele / mUSDT </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mUNI.address}`} > ele / mUNI </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mMATIC.address}`} > ele / mMATIC </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mSHIB.address}`} > ele / mSHIB </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mLINK.address}`} > ele / mLINK </option>
+      <option value={`${config[chainId].ele.address},${config[chainId].mXEN.address}`} > ele / mXEN </option>
       </select>) 
       : 
       (<div>

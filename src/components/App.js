@@ -31,24 +31,24 @@ function App() {
    //connect ethers to blockchain 
     const provider = loadProvider(dispatch) 
   //fetch current networks's chainId (e.g. hardhat :31337 , kovan :42) 
-    const chainId = await loadNetwork(provider , dispatch) //network.chainId = {chainId} destructring in javascript
+    const chainId = await loadNetwork(provider , dispatch)
     
 
   //reload the page when network changes
    window.ethereum.on('chainChanged' , () =>{
     window.location.reload()
    })
+   
   //fetch current account and balance from metamask when changed 
   window.ethereum.on('accountsChanged' , () =>{
      loadAccount(provider,dispatch)
   }) 
-    // await loadAccount(provider,dispatch)
 
 
     //load token smart conctracts
-    const DApp = config[chainId].DApp
-    const mETH = config[chainId].mETH
-    await loadTokens(provider , [DApp.address , mETH.address] , dispatch )
+    const ele = config[chainId].ele
+    const mWETH = config[chainId].mWETH
+    await loadTokens(provider , [ele.address , mWETH.address] , dispatch )
 
     //load exchange smart contract
     const exchangeConfig = config[chainId].exchange 

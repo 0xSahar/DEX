@@ -4,16 +4,15 @@ import EXCHANGE_ABI from '../abis/Exchange.json';
 
 export const loadProvider = (dispatch) =>{
 	//provider = connection to the blockchain
-   //provider = connection 
  const connection = new ethers.providers.Web3Provider(window.ethereum)//metamask connection
- dispatch({type: 'PROVIDER_LOADED' , connection }) //connection :connection
+ dispatch({type: 'PROVIDER_LOADED' , connection }) 
 
  return connection 
     
 }
 
 export const loadNetwork = async (provider , dispatch)=>{
-    const {chainId} = await provider.getNetwork() //network(chainId) = blockchain
+    const {chainId} = await provider.getNetwork()
     dispatch({type : 'NETWORK_LOADED' , chainId }) 
 
     return chainId
@@ -82,11 +81,6 @@ export const loadNetwork = async (provider , dispatch)=>{
     })
  }
 
-//function(movie) === movie =>
-
-
-
-
 
  //----------------------------------------
  //load user balances (wallet and exchange)
@@ -128,7 +122,7 @@ export const loadNetwork = async (provider , dispatch)=>{
  
  //fetch all orders
    const orderStream = await exchange.queryFilter('Order' , 0 , block)
-   const allOrders = orderStream.map(event => event.args) //we get the arguments from the event itself = orders
+   const allOrders = orderStream.map(event => event.args)
 
    dispatch ({type : 'ALL_ORDERS_LOADED' , allOrders})
    

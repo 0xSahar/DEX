@@ -102,8 +102,11 @@ const Transactions = () => {
            </div> 
         </div> 
 
-      
-         <table> 
+        {!myFilledOrders || myFilledOrders.length === 0 ?(
+        <Banner text = 'No Transactions'/>
+        ):(
+
+       <table> 
            <thead> 
              <tr> 
                <th>Time <img src={sort} alt='Sort' /></th> 
@@ -127,8 +130,9 @@ const Transactions = () => {
 
             
            </tbody> 
-         </table>
-         </div>  
+         </table> 
+         )}
+            </div>
       )}
      
 

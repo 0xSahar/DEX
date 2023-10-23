@@ -4,11 +4,13 @@ import Chart from 'react-apexcharts'
 import arrowDown from '../assets/down-arrow.svg'
 import arrowUp from '../assets/up-arrow.svg'
 
-import {options , defaultSeries } from './PriceChart.config'
+import { options, defaultSeries } from './PriceChart.config';
 
 import { PriceChartSelector } from '../store/Selectors'
 
-import Banner from './Banner'
+import Banner from './Banner';
+
+
 
 
 const PriceChart = () => {
@@ -48,22 +50,20 @@ const PriceChart = () => {
 
       {/* Price chart goes here */}
 
-   {!account ?(
-    <Banner text ={'Please connect with Metamask'} />
-    )
-   :(
-     <Chart
-     options ={options} 
-     series ={PriceChart ? PriceChart.series : defaultSeries} 
-     type = "candlestick"
-     width = "100%"
-     height = "100%"
-  />
-    )}
+   {!account ? (
+        <Banner text={'Please connect with Metamask'} />
+      ) : (
+        <Chart
+          type="candlestick"
+          options={options}
+          series={ PriceChart ? PriceChart.series : defaultSeries }
+          width="100%"
+          height="100%"
+        />
+      )}
 
     </div>
   );
-
 }
 
 export default PriceChart;

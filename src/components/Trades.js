@@ -47,8 +47,6 @@ const Trades = () => {
       </table>
         )}
 
-     
-
     </div>
   );
 }

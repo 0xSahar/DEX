@@ -1,20 +1,72 @@
 {
    "31337" : {
       "exchange" :{
-        "address" : "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+        "address" : "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318"
       },
-       "DApp" :{
+       "ele" :{
         "address" : "0x5FbDB2315678afecb367f032d93F642f64180aa3"
       },
-       "mETH" :{
+       "mWETH" :{
         "address" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
       },
        "mDAI" :{
         "address" : "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
       },
-       "explorerURL" : "#"   
+      "mUSDT" :{
+        "address" : "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+     },
+     "mUNI" :{
+        "address" : "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+     },
+      "mMATIC" :{
+        "address" : "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+     },
+     "mSHIB" :{
+        "address" : "0x0165878A594ca255338adfa4d48449f69242Eb8F"
+     },
+     "mLINK" :{
+        "address" : "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"
+     },
+     "mXEN" :{
+        "address" : "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
+     },
+
+        "explorerURL" : "#"   
    },
-   "42": {
-      "explorerURL" : "https://kovan.etherscan.io/"
+   
+   "11155111": {
+
+      "exchange" :{
+        "address" : "0xcEa4D2400c935576F2F7e544e799ef3A43A9CEE7"
+      },
+       "ele" :{
+        "address" : "0x3fE31Ccb60C74542d8f188efBa2AF793221c5521"
+      },
+       "mWETH" :{
+        "address" : "0xf993F0B849C1843eFb2Bf2A2f801843705b3b36f"
+      },
+       "mDAI" :{
+        "address" : "0xba47008118221fDC92C11E922533956FDa6Ef3F6"
+      },
+      "mUSDT" :{
+        "address" : "0xF17e1a69Adf1813C9e0BB32dE619Cac0555224bc"
+     },
+     "mUNI" :{
+        "address" : "0xdAbb29a5859647f9963ccE9c187818AF2f67B2c5"
+     },
+      "mMATIC" :{
+        "address" : "0x81Ae6C19A0E826D856CDee5f2BC2a9051976D1C3"
+     },
+     "mSHIB" :{
+        "address" : "0x17017a8879483BaFBeC2e99d80bA203d0f0c77eB"
+     },
+     "mLINK" :{
+        "address" : "0x0c4202C0Cc23286Cf639c51bc2bb49c18eE55dF7"
+     },
+     "mXEN" :{
+        "address" : "0x10f7141Ead0F2D43ba5a6e145AC7DEcB797042a9"
+     },
+
+      "explorerURL" : "https://sepolia.etherscan.io/"
    }
 }
